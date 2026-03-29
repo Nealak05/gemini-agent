@@ -160,6 +160,37 @@ A: 2 + 8 is 10.
 
 When I explicitly asked to answer without a tool, the agent used its own knowledge instead of calling the calculator. This shows the agent adapts its behavior based on user instructions.
 
+### Test 12: Agent Knows Its Own Limitations (Can vs Cannot Answer Without Tools)
+
+One of the most interesting things I noticed during testing is that the agent understands when it can answer on its own and when it truly needs a tool:
+
+**Can answer without tool — simple math:**
+```
+You: what is 2 + 8 ?
+  [tool_call] Calling tool: calculator({'expression': '2 + 8'})
+  [tool_result] Tool 'calculator' returned: Result: 10
+A: 2 + 8 equals 10.
+
+You: without tool
+A: 2 + 8 is 10.
+```
+
+**Can answer without tool — translation from its own knowledge:**
+```
+You: ok translate hello to french without tool
+A: Hello in French is "Bonjour."
+```
+
+**Cannot answer without tool — real-time weather data:**
+```
+You: answer what is weather in baku without using tool
+A: I apologize, but I cannot provide real-time weather information for Baku without using my
+   weather tool. As an AI, I don't have access to current, live data without utilizing my
+   designated tools.
+```
+
+This shows a key distinction: the agent can answer simple facts (math, common translations) from its own training data, but it honestly refuses to guess when real-time information is required. It knows its own limitations, which is exactly the kind of adaptive behavior the ReAct architecture is designed to produce.
+
 ---
 
 ## Error Handling Tests
@@ -196,3 +227,4 @@ This was also handled gracefully with an informative error message. The agent ke
 | Memory clear | Reset history | PASS |
 | API error handling | 429/404 errors | PASS |
 | Agent self-explanation | Describes ReAct loop | PASS |
+| Knows its limitations | Can vs cannot without tools | PASS |
